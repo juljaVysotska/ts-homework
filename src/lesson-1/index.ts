@@ -9,7 +9,7 @@ const hobbies: string[] | null = ['horse riding', 'reading', 'listening music'];
 const displayUserInfo = ({ fullName, birthday, telNumber, hobbies }: User) => {
     return `
     Name: ${fullName};
-    Birthday: ${typeof birthday === 'object' ? getParsedBirthday(birthday) : birthday};
+    Birthday: ${birthday instanceof Date ? getParsedBirthday(birthday) : birthday};
     Contact number: ${telNumber};
     Hobbies: ${hobbies ? hobbies.join(', ') : 'no info'};
     `;
