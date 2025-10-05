@@ -7,7 +7,7 @@ const telNumber: number | string = '+12345636784';
 const hobbies: string[] | null = ['horse riding', 'reading', 'listening music'];
 
 const displayUserInfo = ({ fullName, birthday, telNumber, hobbies }: User) => {
-    return `
+  return `
     Name: ${fullName};
     Birthday: ${birthday instanceof Date ? getParsedBirthday(birthday) : birthday};
     Contact number: ${telNumber};
@@ -15,9 +15,11 @@ const displayUserInfo = ({ fullName, birthday, telNumber, hobbies }: User) => {
     `;
 };
 
-console.log(displayUserInfo({
+console.log(
+  displayUserInfo({
     fullName,
     birthday,
     telNumber,
-    hobbies
-}));
+    hobbies,
+  }),
+);
