@@ -4,13 +4,10 @@ export const checkIsDoneBeforeDeadline = (taskId: string): boolean | null => {
   const task = data.find((item) => item.id === taskId);
 
   if (task) {
-    const today = Date.now();
-    const deadline =
-      task.deadline instanceof Date
-        ? new Date(task.deadline).valueOf()
-        : Date.parse(task.deadline).valueOf();
+    const today = new Date();
+    const deadline = new Date(task.deadline);
 
-    return today - deadline < 0 && task.status === 'done' ? true : false;
+    return today.valueOf() - deadline.valueOf() < 0 && task.status === 'done';
   }
 
   return null;
