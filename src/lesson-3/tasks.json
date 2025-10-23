@@ -1,54 +1,60 @@
 [
-    {
-        "id": "3f9b2c4d-8e6a-4f12-9b3a-7c1e5d2a6f8b",
-        "type": "UNLINKED",
-        "title": "Initialize repository",
-        "description": "Set up the base project structure",
-        "status": "todo",
-        "createdAt": "2025-09-28T14:00:00Z",
-        "priority": "low"
-    },
-    {
-        "id": "7d3a1b9e-4c8f-4b5e-9a2d-1f7c6e3b8a4d",
-        "type": "SUBTASK",
-        "title": "Write README",
-        "description": "Add usage and setup instructions",
-        "status": "in_progress",
-        "createdAt": "2025-03-12T14:00:00Z",
-        "priority": "normal",
-        "parentId": 1
-    },
-    {
-        "type": "BUG",
-        "id": "9a6f2b3c-1d4e-4f8a-8b3c-5d2a7e1f6b9c",
-        "title": "Fix login error",
-        "description": "App crashes when credentials are incorrect",
-        "status": "done",
-        "priority": "high",
-        "createdAt": "2025-09-02T14:00:00Z",
-        "parentId": 1
-    },
-    {
-        "type": "STORY",
-        "id": "2c8e7b1d-6f4a-4d3c-9a5e-1b7f2c8d3e6a",
-        "title": "User registration flow",
-        "description": "As a user, I want to register using email and password",
-        "status": "todo",
-        "priority": "high",
-        "createdAt": "2025-08-28T14:00:00Z",
-        "storyPoints": 5
-    },
-    {
-        "type": "EPIC",
-        "id": "5e1b7a2c-3d9f-4a6e-8b2c-7f3d1a9e5c4b",
-        "title": "Authentication system",
-        "description": "All tasks related to user authentication",
-        "status": "todo",
-        "priority": "normal",
-        "createdAt": "2025-09-18T14:00:00Z",
-        "children": [
-            "7d3a1b9e-4c8f-4b5e-9a2d-1f7c6e3b8a4d",
-            "9a6f2b3c-1d4e-4f8a-8b3c-5d2a7e1f6b9c"
-        ]
-    }
+  {
+    "id": "008ecd49-ee30-45d4-b069-039dec686447",
+    "title": "Implement login page",
+    "description": "Create the login page UI and functionality",
+    "status": "in_progress",
+    "deadline": "2025-11-05T12:00:00.000Z",
+    "createdAt": "2025-10-20T09:30:00.000Z",
+    "priority": "high",
+    "type": "subtask",
+    "parentId": "10"
+  },
+  {
+    "id": "f761752b-fc93-447b-b1dd-b97a16fa572d",
+    "title": "Fix navbar bug",
+    "description": "Navbar collapses incorrectly on mobile screens",
+    "status": "todo",
+    "deadline": "2025-10-28T17:00:00.000Z",
+    "createdAt": "2025-10-22T11:45:00.000Z",
+    "priority": "normal",
+    "type": "bug",
+    "parentId": null
+  },
+  {
+    "id": "e114f01f-4fbe-489d-a955-bb424f336291",
+    "title": "User registration flow",
+    "description": "Add backend API integration for registration",
+    "status": "todo",
+    "deadline": "2025-11-10T15:00:00.000Z",
+    "createdAt": "2025-10-21T10:00:00.000Z",
+    "priority": "high",
+    "type": "story",
+    "parentId": "20",
+    "storyPoints": 8
+  },
+  {
+    "id": "d8d2394c-161f-420c-823f-10bbdb190d6a",
+    "title": "New dashboard epic",
+    "description": "Overarching epic for new dashboard features",
+    "status": "todo",
+    "deadline": "2025-12-31T00:00:00.000Z",
+    "createdAt": "2025-10-15T08:00:00.000Z",
+    "priority": "high",
+    "type": "epic",
+    "children": [
+      "7592f267-2982-4c89-b72b-24d9739cb40d",
+      "e114f01f-4fbe-489d-a955-bb424f336291"
+    ]
+  },
+  {
+    "id": "7592f267-2982-4c89-b72b-24d9739cb40d",
+    "title": "Write documentation",
+    "description": "Document all API endpoints and usage",
+    "status": "in_progress",
+    "deadline": "2025-11-01T12:00:00.000Z",
+    "createdAt": "2025-10-18T09:00:00.000Z",
+    "priority": "low",
+    "type": "subtask"
+  }
 ]

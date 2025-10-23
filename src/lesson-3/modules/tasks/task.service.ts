@@ -1,111 +1,119 @@
-import { Bug, Epic, FilterParams, InstanceType, NewTask, Story, Subtask, TaskDetails, TasksTypes, UnlinkedTask } from './task.types';
+import {
+  Bug,
+  Epic,
+  FilterParams,
+  NewTaskBody,
+  Story,
+  Subtask,
+  TaskDetails,
+  TaskType,
+  UnitedSchema,
+} from './task.types';
 
 export class TaskService {
-    #tasks: TasksTypes[];
+  #tasks: UnitedSchema[];
 
-    constructor(tasks: TasksTypes[]) {
-        this.#tasks = tasks;
+  constructor(tasks: UnitedSchema[]) {
+    this.#tasks = tasks;
+  }
+
+  getAll() {
+    return this.#tasks;
+  }
+
+  // create new Task
+  createNewInstance({
+    type,
+    taskDetail,
+  }: {
+    type: TaskType;
+    taskDetail: NewTaskBody;
+  }) {
+    let task!: UnitedSchema;
+
+    if (type === 'bug') {
+      task = new Bug({ ...taskDetail, createdAt: new Date() });
     }
 
-    getAll() {
-        return this.#tasks;
+    if (type === 'story') {
+      task = new Story({ ...taskDetail, createdAt: new Date() });
     }
 
-    // create new Task
-    createNewInstance({
-        type,
-        taskDetail
-    }: {
-        type: InstanceType,
-        taskDetail: NewTask;
-    }) {
-        let task: TasksTypes = new UnlinkedTask(taskDetail);
-
-        if (type === InstanceType.SUBTASK) {
-            task = new Subtask(taskDetail, '');
-        }
-
-        if (type === InstanceType.BUG) {
-            task = new Bug(taskDetail, '', 'normal');
-        }
-
-        if (type === InstanceType.STORY) {
-
-            task = new Story(taskDetail, 1);
-        }
-
-        if (type === InstanceType.EPIC) {
-            task = new Epic(taskDetail, []);
-        }
-
-        this.#tasks.push(task);
-        return task;
-
+    if (type === 'epic') {
+      task = new Epic({ ...taskDetail, createdAt: new Date() });
     }
 
-    // get by id
-    getTaskById = (taskId: string): TasksTypes | null => {
-        const find = this.#tasks.find((item) => item.id === taskId);
-        return find || null;
-    };
+    if (type === 'subtask') {
+      task = new Subtask({ ...taskDetail, createdAt: new Date() });
+    }
 
-    // delete task by id
-    deleteTaskById = (taskId: string): TasksTypes[] => {
-        const taskIndex = this.#tasks.findIndex((task) => task.id === taskId);
+    this.#tasks.push(task);
+    return task;
+  }
 
-        if (taskIndex === -1) { throw new Error("Task not found"); }
+  // get by id
+  getTaskById = (taskId: string): UnitedSchema | null => {
+    const find = this.#tasks.find((item) => item.id === taskId);
+    return find || null;
+  };
 
-        this.#tasks.splice(taskIndex, 1);
-        return this.#tasks;
-    };
+  // // delete task by id
+  deleteTaskById = (taskId: string): UnitedSchema[] => {
+    const taskIndex = this.#tasks.findIndex((task) => task.id === taskId);
 
-    // update task by id
-    // updateTaskDetails = (
-    //     taskId: string,
-    //     newDetails: TaskDetails,
-    // ): TasksTypes | null => {
-    //     const task = this.getTaskById(taskId);
+    if (taskIndex === -1) {
+      throw new Error('Task not found');
+    }
 
-    //     if (task) {
-    //         // update class Instance ?
-    //         return {
-    //             ...task,
-    //             ...newDetails,
-    //         };
-    //     }
+    this.#tasks.splice(taskIndex, 1);
+    return this.#tasks;
+  };
 
-    //     return null;
-    // };
+  // update task by id
+  updateTaskDetails = (
+    taskId: string,
+    newDetails: TaskDetails,
+  ): UnitedSchema | null => {
+    const task = this.getTaskById(taskId);
+    if (task) {
+      return task.updateTask(newDetails);
+    }
 
-    // filter by param
-    filterArray = ({
-        status,
-        createdAt,
-        priority,
-    }: FilterParams): TasksTypes[] => {
-        const filteredData = this.#tasks.filter((task) => {
-            const filteredByStatus = status ? task.status === status : true;
-            const filteredByPriority = priority ? task.priority === priority : true;
-            const filteredByCreatedAt = createdAt ? task.createdAt === createdAt : true;
+    return null;
+  };
 
-            return filteredByStatus && filteredByPriority && filteredByCreatedAt;
-        });
+  // filter by param
+  filterArray = ({
+    status,
+    createdAt,
+    priority,
+    type,
+  }: FilterParams): UnitedSchema[] => {
+    const filteredData = this.#tasks.filter((task) => {
+      const filteredByType = type ? task.type === type : true;
+      const filteredByStatus = status ? task.status === status : true;
+      const filteredByPriority = priority ? task.priority === priority : true;
+      const filteredByCreatedAt = createdAt
+        ? task.createdAt === createdAt
+        : true;
 
-        return filteredData;
-    };
+      return (
+        filteredByStatus &&
+        filteredByPriority &&
+        filteredByCreatedAt &&
+        filteredByType
+      );
+    });
 
-    // // check is done before deadline
-    // checkIsDoneBeforeDeadline = (taskId: string): boolean | null => {
-    //     const task = this.getTaskById(taskId);
+    return filteredData;
+  };
 
-    //     if (task) {
-    //         const today = new Date();
-    //         const deadline = new Date(task.deadline);
+  // check is done before deadline
+  checkIsOverdue = (taskId: string): boolean | null => {
+    const task = this.getTaskById(taskId);
 
-    //         return today.valueOf() - deadline.valueOf() < 0 && task.status === 'done';
-    //     }
+    if (task) return task?.isOverdue();
 
-    //     return null;
-    // };
-
+    return null;
+  };
 }

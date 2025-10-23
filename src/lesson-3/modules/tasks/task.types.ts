@@ -1,167 +1,241 @@
 import * as z from 'zod';
 
+const TaskTypeSchema = z.enum(['task', 'subtask', 'bug', 'story', 'epic']);
+export const TaskType = TaskTypeSchema.enum;
+export type TaskType = z.infer<typeof TaskTypeSchema>;
+
 const StatusSchema = z.enum(['todo', 'in_progress', 'done']);
+const Status = StatusSchema.enum;
 export type Status = z.infer<typeof StatusSchema>;
 
 const PrioritySchema = z.enum(['low', 'normal', 'high']);
+const Priority = PrioritySchema.enum;
 export type Priority = z.infer<typeof PrioritySchema>;
 
-abstract class TaskClass {
-    abstract type: string;
-    abstract id: string;
-    abstract getTaskInfo(): void;
-    abstract createdAt: Date;
+abstract class Task {
+  abstract type: TaskType;
+  public id!: string;
 
-    constructor(
-        public title: string,
-        public description: string,
-        public status: Status,
-        public priority: Priority
-    ) { }
+  constructor(
+    public title: string,
+    public description: string,
+    public status: Status,
+    public deadline: Date,
+    public createdAt: Date,
+    public priority: Priority,
+  ) {}
+
+  getTaskType() {
+    return this.type;
+  }
+
+  markAsDone() {
+    this.status = Status.done;
+  }
+
+  changeStatus(status: Status) {
+    this.status = status;
+  }
+
+  changePriority(priority: Priority) {
+    this.priority = priority;
+  }
+
+  isOverdue() {
+    const now = new Date();
+    return this.status === 'done' && now > this.deadline;
+  }
+
+  updateTask(newData: TaskDetails) {
+    Object.assign(this, newData);
+
+    if (newData.status) {
+      this.changeStatus(newData.status);
+    }
+    if (newData.priority) {
+      this.changePriority(newData.priority);
+    }
+
+    return this;
+  }
 }
 
-export enum InstanceType {
-    SUBTASK = 'subtask',
-    BUG = 'bug',
-    STORY = 'story',
-    EPIC = 'epic',
-    UNLINKED_TASK = 'unlinked-task'
+export class Subtask extends Task {
+  type = TaskType.subtask;
+
+  constructor(
+    data: TaskBody,
+    public parentId: string | null = null,
+  ) {
+    super(
+      data.title,
+      data.description,
+      data.status,
+      data.deadline,
+      data.createdAt,
+      data.priority,
+    );
+    this.id = data.id ?? crypto.randomUUID();
+  }
 }
 
-export class UnlinkedTask extends TaskClass {
-    id: string;
-    type = InstanceType.SUBTASK;
-    createdAt: Date;
+export class Bug extends Task {
+  type = TaskType.bug;
 
-    constructor(task: NewTask) {
-        super(task.title, task.description, task.status, task.priority);
-        this.id = crypto.randomUUID();
-        this.createdAt = new Date();
-    }
-
-    getTaskInfo() {
-        return this.type;
-    }
+  constructor(
+    data: TaskBody,
+    public parentId: string | null = null,
+    public priority: Priority = Priority.low,
+  ) {
+    super(
+      data.title,
+      data.description,
+      data.status,
+      data.deadline,
+      data.createdAt,
+      priority,
+    );
+    this.id = data.id ?? crypto.randomUUID();
+  }
 }
 
-export class Subtask extends TaskClass {
-    id: string;
-    type = InstanceType.SUBTASK;
-    parentId: string;
-    createdAt: Date;
+export class Story extends Task {
+  type = TaskType.story;
 
-    constructor(task: NewTask, parentId: string) {
-        super(task.title, task.description, task.status, task.priority);
-        this.parentId = parentId;
-        this.id = crypto.randomUUID();
-        this.createdAt = new Date();
-    }
+  constructor(
+    data: TaskBody,
+    public parentId: string | null = null,
+    public storyPoints: number = 1,
+  ) {
+    super(
+      data.title,
+      data.description,
+      data.status,
+      data.deadline,
+      data.createdAt,
+      data.priority,
+    );
+    this.id = data.id ?? crypto.randomUUID();
+  }
 
-    getTaskInfo() {
-        return this.type;
-    }
+  getStoryPoints() {
+    return this.storyPoints;
+  }
+
+  setStoryPoints(storyPoints: number) {
+    if (storyPoints <= 0) return;
+    this.storyPoints = storyPoints;
+  }
 }
 
-export class Bug extends TaskClass {
-    id: string;
-    type = InstanceType.BUG;
-    parentId: string;
-    createdAt: Date;
+export class Epic extends Task {
+  type = TaskType.epic;
 
-    constructor(task: NewTask, parentId: string, priority: Priority) {
-        const newTaskUpdate = {
-            ...task,
-            priority
-        };
+  constructor(
+    data: TaskBody,
+    public children: string[] = [],
+  ) {
+    super(
+      data.title,
+      data.description,
+      data.status,
+      data.deadline,
+      data.createdAt,
+      data.priority,
+    );
+    this.id = data.id ?? crypto.randomUUID();
+  }
 
-        super(newTaskUpdate.title, newTaskUpdate.description, newTaskUpdate.status, newTaskUpdate.priority);
-        this.parentId = parentId;
-        this.id = crypto.randomUUID();
-        this.createdAt = new Date();
-    }
+  addChild(childId: string) {
+    this.children.push(childId);
+  }
 
-    getTaskInfo() {
-        return this.type;
-    }
+  getChildren() {
+    return this.children;
+  }
 }
 
-export class Story extends TaskClass {
-    id: string;
-    type = InstanceType.STORY;
-    storyPoints: number;
-    createdAt: Date;
+export const taskSchema = z.object({
+  id: z.string().optional(),
+  title: z.string(),
+  description: z.string(),
+  status: StatusSchema,
+  deadline: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  priority: PrioritySchema,
+});
 
+export type TaskBody = z.infer<typeof taskSchema>;
 
-    constructor(task: NewTask, storyPoints: number) {
-        super(task.title, task.description, task.status, task.priority);
-        this.storyPoints = storyPoints;
-        this.id = crypto.randomUUID();
-        this.createdAt = new Date();
-    }
+export const newTaskSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  status: StatusSchema,
+  deadline: z.coerce.date(),
+  priority: PrioritySchema,
+});
+export type NewTaskBody = z.infer<typeof newTaskSchema>;
 
-    getTaskInfo() {
-        return this.type;
-    }
-}
+const subtaskSchema = taskSchema
+  .extend({
+    type: z.literal('subtask'),
+    parentId: z.any(),
+  })
+  .transform((data) => new Subtask(data, data.parentId));
 
-export class Epic extends TaskClass {
-    id: string;
-    type = InstanceType.EPIC;
-    children: Story[];
-    createdAt: Date;
+const bugSchema = taskSchema
+  .extend({
+    type: z.literal('bug'),
+    parentId: z.any(),
+    priority: PrioritySchema,
+  })
+  .transform((data) => new Bug(data, data.parentId, data.priority));
 
+const storySchema = taskSchema
+  .extend({
+    type: z.literal('story'),
+    parentId: z.any(),
+    storyPoints: z.number(),
+  })
+  .transform((data) => new Story(data, data.parentId, 1));
 
-    constructor(task: NewTask, children: Story[]) {
-        super(task.title, task.description, task.status, task.priority);
-        this.children = children;
-        this.id = crypto.randomUUID();
-        this.createdAt = new Date();
-    }
+const epicSchema = taskSchema
+  .extend({
+    type: z.literal('epic'),
+    children: z.array(z.string()),
+  })
+  .transform((data) => new Epic(data, []));
 
-    addChild(child: Story) {
-        this.children.push(child);
-        return this.children;
-    }
+export const unitedSchema = z.discriminatedUnion('type', [
+  subtaskSchema,
+  bugSchema,
+  storySchema,
+  epicSchema,
+]);
 
-    getTaskInfo() {
-        return this.type;
-    }
-}
+export type UnitedSchema = z.infer<typeof unitedSchema>;
 
-export type NewTask = {
-    title: string;
-    description: string;
-    status: Status;
-    priority: Priority;
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const FilterParamsSchema = z
+  .object({
+    status: StatusSchema,
+    createdAt: z.coerce.date(),
+    priority: PrioritySchema,
+    type: TaskTypeSchema,
+  })
+  .partial();
 
-export type TasksTypes = UnlinkedTask | Subtask | Bug | Story | Epic;
+export type FilterParams = z.infer<typeof FilterParamsSchema>;
 
-// todo
-export const TaskSchema = z.object({
-    id: z.string(),
-    type: z.enum(["UNLINKED", "SUBTASK", "BUG", "STORY", "EPIC"]),
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const TaskDetailsSchema = z
+  .object({
     title: z.string(),
     description: z.string(),
     status: StatusSchema,
-    createdAt: z.string(), // ISO date string
+    deadline: z.coerce.date(),
     priority: PrioritySchema,
+  })
+  .partial();
 
-    parentId: z.number().optional(),
-    storyPoints: z.number().optional(),
-    children: z.array(z.string()).optional()
-});
-
-
-export type TaskDetails = Partial<{
-    title: string,
-    description: string,
-    status: Status,
-    priority: Priority,
-}>;
-
-export type FilterParams = Partial<{
-    status: Status;
-    createdAt: string | Date;
-    priority: Priority;
-}>;
+export type TaskDetails = z.infer<typeof TaskDetailsSchema>;
