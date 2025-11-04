@@ -5,3 +5,4 @@ import { unitedSchema } from './modules/tasks/task.types';
 const tasksArray = z.array(unitedSchema);
 
 export const data = tasksArray.parse(tasks);
+console.log(data);
