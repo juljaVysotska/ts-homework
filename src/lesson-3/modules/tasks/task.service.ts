@@ -1,10 +1,10 @@
+import { Bug } from './models/bug.model';
+import { Epic } from './models/epic.model';
+import { Story } from './models/story.model';
+import { Subtask } from './models/subtask.model';
 import {
-  Bug,
-  Epic,
   FilterParams,
   NewTaskBody,
-  Story,
-  Subtask,
   TaskDetails,
   TaskType,
   UnitedSchema,
@@ -30,21 +30,21 @@ export class TaskService {
     taskDetail: NewTaskBody;
   }) {
     let task!: UnitedSchema;
+    const taskData = { ...taskDetail, createdAt: new Date() };
 
-    if (type === 'bug') {
-      task = new Bug({ ...taskDetail, createdAt: new Date() });
-    }
-
-    if (type === 'story') {
-      task = new Story({ ...taskDetail, createdAt: new Date() });
-    }
-
-    if (type === 'epic') {
-      task = new Epic({ ...taskDetail, createdAt: new Date() });
-    }
-
-    if (type === 'subtask') {
-      task = new Subtask({ ...taskDetail, createdAt: new Date() });
+    switch (type) {
+      case 'bug':
+        task = new Bug(taskData);
+        break;
+      case 'story':
+        task = new Story(taskData);
+        break;
+      case 'epic':
+        task = new Epic(taskData);
+        break;
+      case 'subtask':
+        task = new Subtask(taskData);
+        break;
     }
 
     this.#tasks.push(task);
@@ -112,7 +112,7 @@ export class TaskService {
   checkIsOverdue = (taskId: string): boolean | null => {
     const task = this.getTaskById(taskId);
 
-    if (task) return task?.isOverdue();
+    if (task) return task.isOverdue();
 
     return null;
   };

@@ -8,11 +8,12 @@ import {
 } from './task.types';
 
 export class TaskController {
-  taskService: TaskService;
+  // taskService: TaskService;
 
-  constructor(tasks: UnitedSchema[]) {
-    this.taskService = new TaskService(tasks);
-  }
+  // constructor(tasks: UnitedSchema[]) {
+  //   this.taskService = new TaskService(tasks);
+  // }
+  constructor(public taskService: TaskService) {}
 
   getAll() {
     return this.taskService.getAll();
