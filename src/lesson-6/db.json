@@ -57,33 +57,6 @@
       "createdAt": "2025-10-18T09:00:00.000Z",
       "priority": "low",
       "type": "subtask"
-    },
-    {
-      "id": "6314",
-      "title": "title",
-      "description": "desc",
-      "status": "todo",
-      "deadline": "2025-11-05",
-      "priority": "low",
-      "createdAt": "2025-11-04T18:25:24.120Z"
-    },
-    {
-      "id": "6303",
-      "title": "creat page",
-      "description": "creat Description",
-      "status": "in_progress",
-      "deadline": "2025-11-09",
-      "priority": "high",
-      "createdAt": "2025-11-04T18:52:46.175Z"
-    },
-    {
-      "id": "479a",
-      "title": "werty",
-      "description": "werftghj",
-      "status": "done",
-      "deadline": "2025-11-19",
-      "priority": "high",
-      "createdAt": "2025-11-04T18:59:54.517Z"
     }
   ]
 }
