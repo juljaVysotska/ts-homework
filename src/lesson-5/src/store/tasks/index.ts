@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { NewTaskBody, TaskBody } from '../../types';
+import type { TaskBody } from '../../types';
 
 export const taskApi = createApi({
   reducerPath: 'taskApi',
@@ -15,8 +15,8 @@ export const taskApi = createApi({
       query: ({ id }) => `/tasks/${id}`,
     }),
 
-    createTask: builder.mutation<TaskBody, NewTaskBody>({
-      query: (body: NewTaskBody) => ({
+    createTask: builder.mutation<TaskBody, TaskBody>({
+      query: (body: TaskBody) => ({
         url: `/tasks`,
         method: 'POST',
         body,
