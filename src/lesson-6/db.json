@@ -1,0 +1,80 @@
+{
+  "tasks": [
+    {
+      "id": "008ecd49-ee30-45d4-b069-039dec686447",
+      "title": "Implement login page",
+      "description": "Create the login page UI and functionality",
+      "status": "in_progress",
+      "deadline": "2025-11-05T12:00:00.000Z",
+      "createdAt": "2025-10-20T09:30:00.000Z",
+      "priority": "high",
+      "type": "subtask",
+      "parentId": "10"
+    },
+    {
+      "id": "f761752b-fc93-447b-b1dd-b97a16fa572d",
+      "title": "Fix navbar bug",
+      "description": "Navbar collapses incorrectly on mobile screens",
+      "status": "todo",
+      "deadline": "2025-10-28T17:00:00.000Z",
+      "createdAt": "2025-10-22T11:45:00.000Z",
+      "priority": "normal",
+      "type": "bug",
+      "parentId": null
+    },
+    {
+      "id": "e114f01f-4fbe-489d-a955-bb424f336291",
+      "title": "User registration flow",
+      "description": "Add backend API integration for registration",
+      "status": "done",
+      "deadline": "2025-11-10T15:00:00.000Z",
+      "createdAt": "2025-10-21T10:00:00.000Z",
+      "priority": "high",
+      "type": "story",
+      "parentId": "20",
+      "storyPoints": 8
+    },
+    {
+      "id": "d8d2394c-161f-420c-823f-10bbdb190d6a",
+      "title": "New dashboard epic",
+      "description": "Overarching epic for new dashboard features",
+      "status": "todo",
+      "deadline": "2025-12-31T00:00:00.000Z",
+      "createdAt": "2025-10-15T08:00:00.000Z",
+      "priority": "high",
+      "type": "epic",
+      "children": [
+        "7592f267-2982-4c89-b72b-24d9739cb40d",
+        "e114f01f-4fbe-489d-a955-bb424f336291"
+      ]
+    },
+    {
+      "id": "7592f267-2982-4c89-b72b-24d9739cb40d",
+      "title": "Write documentation",
+      "description": "Document all API endpoints and usage",
+      "status": "in_progress",
+      "deadline": "2025-11-01T12:00:00.000Z",
+      "createdAt": "2025-10-18T09:00:00.000Z",
+      "priority": "low",
+      "type": "subtask"
+    },
+    {
+      "id": "d4a6",
+      "title": "Create widget",
+      "description": "Create widget with new version",
+      "status": "todo",
+      "deadline": "2025-11-06",
+      "priority": "low",
+      "createdAt": "2025-11-05T15:19:24.062Z"
+    },
+    {
+      "id": "cd4c",
+      "title": "Create logo",
+      "description": "Create logo",
+      "status": "todo",
+      "deadline": "2025-11-07",
+      "priority": "low",
+      "createdAt": "2025-11-05T15:21:20.768Z"
+    }
+  ]
+}
