@@ -8,11 +8,11 @@ const TaskTypeSchema = z.enum(['task', 'subtask', 'bug', 'story', 'epic']);
 export const TaskType = TaskTypeSchema.enum;
 export type TaskType = z.infer<typeof TaskTypeSchema>;
 
-const StatusSchema = z.enum(['todo', 'in_progress', 'done']);
+export const StatusSchema = z.enum(['todo', 'in_progress', 'done']);
 export const Status = StatusSchema.enum;
 export type Status = z.infer<typeof StatusSchema>;
 
-const PrioritySchema = z.enum(['low', 'normal', 'high']);
+export const PrioritySchema = z.enum(['low', 'normal', 'high']);
 export const Priority = PrioritySchema.enum;
 export type Priority = z.infer<typeof PrioritySchema>;
 
@@ -21,8 +21,8 @@ export const taskSchema = z.object({
   title: z.string(),
   description: z.string(),
   status: StatusSchema,
-  deadline: z.coerce.date(),
-  createdAt: z.coerce.date(),
+  deadline: z.union([z.iso.date(), z.string()]),
+  createdAt: z.union([z.date(), z.string()]),
   priority: PrioritySchema,
 });
 

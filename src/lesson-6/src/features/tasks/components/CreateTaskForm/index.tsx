@@ -1,11 +1,11 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { Controller, useForm } from 'react-hook-form';
-import { newTaskDefaultValueSchema } from './validationSchema';
+import { newTaskDefaultValueSchema, type NewTaskDefaultValueSchema } from './validationSchema';
 import cx from 'classnames';
 import { taskApi } from '../../../../store/tasks';
-import type { NewTaskBody } from '../../../types';
 import { useNavigate } from 'react-router';
 import { AppRoutes } from '../../../../shared/types/router';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const inputElementStyles = {
     label: 'block text-sm font-medium text-gray-700',
@@ -27,12 +27,16 @@ export const CreateTaskForm = () => {
         control,
         formState: { errors, isValid },
         reset,
-    } = useForm<NewTaskBody>({
+        watch
+    } = useForm<NewTaskDefaultValueSchema>({
         mode: 'all',
-        defaultValues: newTaskDefaultValueSchema,
+        resolver: zodResolver(newTaskDefaultValueSchema)
     });
+    watch('title');
 
-    const onSubmit = async (formData: NewTaskBody) => {
+    console.log('isValid', isValid, errors);
+
+    const onSubmit = async (formData: NewTaskDefaultValueSchema) => {
         await createTaskMutation({ ...formData, createdAt: new Date() });
         reset();
         navigation(AppRoutes.TASK_LIST);
@@ -53,10 +57,6 @@ export const CreateTaskForm = () => {
                     })}
                     {...register('title', {
                         required: 'Title is required!',
-                        minLength: {
-                            value: 3,
-                            message: 'Min. 3 symbols!',
-                        },
                     })}
                 />
 
@@ -161,14 +161,6 @@ export const CreateTaskForm = () => {
                     name="deadline"
                     rules={{
                         required: 'Deadline is required',
-                        validate: (value) => {
-                            const selectedDate = new Date(value);
-                            const today = new Date();
-                            if (selectedDate < today) {
-                                return 'Date cannot be in the past';
-                            }
-                            return true;
-                        },
                     }}
                     render={({ field: { onChange } }) => (
                         <>
