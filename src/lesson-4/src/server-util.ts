@@ -1,12 +1,4 @@
-export interface Task {
-  id?: number;
-  title: string;
-  description: string;
-  createdAt?: string;
-  deadline?: Date;
-  status: 'todo' | 'in_progress' | 'done';
-  priority: 'low' | 'normal' | 'high';
-}
+import type { Task } from './types';
 
 const API_URL = 'http://localhost:3000/tasks';
 
