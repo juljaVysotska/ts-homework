@@ -1,4 +1,4 @@
-export enum Routes {
+export enum AppRoutes {
     // task
     TASK = '/task/:id',
     TASK_LIST = '/task',

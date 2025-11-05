@@ -4,6 +4,7 @@ import { Task } from '../../../shared/elements/Task';
 import { EmptyState } from '../../../shared/elements/EmptyState';
 import { LoadingState } from '../../../shared/elements/LoadingState';
 import { ErrorState } from '../../../shared/elements/ErrorState';
+import { AppRoutes } from '../../../shared/types/router';
 
 export const TaskListPage = () => {
     const { data = [], isLoading, isError, refetch } = taskApi.useGetAllQuery();
@@ -25,7 +26,7 @@ export const TaskListPage = () => {
                 title="No tasks yet"
                 description="You haven’t created any tasks. Start by adding your first one!"
                 actionLabel="Add Task"
-                onAction={() => navigation('/task/create')}
+                onAction={() => navigation(AppRoutes.CREATE_TASK)}
             />}
 
             {data.length !== 0 && <ul id='tasks' className='w-full grid gap-y-2 mb-6'>

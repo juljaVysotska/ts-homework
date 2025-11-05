@@ -1,12 +1,14 @@
+import type { FC } from 'react';
 import { Link, Outlet } from 'react-router';
+import { AppRoutes } from '../types/router';
 
-export const MainLayout = () => {
+export const MainLayout: FC = () => {
     return <>
         <aside className="w-64 bg-white shadow-md p-4 flex flex-col">
             <h2 className="text-xl font-semibold mb-6">Menu</h2>
             <nav className="flex flex-col space-y-3">
-                <Link to={'/task'}>Board</Link>
-                <Link to={'/task/create'}>Create task</Link>
+                <Link to={AppRoutes.TASK_LIST}>Board</Link>
+                <Link to={AppRoutes.CREATE_TASK}>Create task</Link>
             </nav>
         </aside>
 

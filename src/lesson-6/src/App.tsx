@@ -1,27 +1,19 @@
-import { useState } from 'react';
-// import { CreateTaskForm } from './components/CreateTaskForm';
-// import { TaskList } from './components/TaskList';
-import { Outlet } from 'react-router';
-import { CreateTaskForm } from './features/tasks/components/CreateTaskForm';
-// import { TaskList } from './features/tasks/components/TaskList';
+import { Route, Routes } from 'react-router';
+import { MainLayout } from './shared/layouts/MainLayout';
+import { TaskListPage } from './features/tasks/pages/TaskListPage';
+import { TaskPage } from './features/tasks/pages/TaskPage';
+import { CreateTaskPage } from './features/tasks/pages/CreateTaskPage';
+import { AppRoutes } from './shared/types/router';
 
 export const App = () => {
-  const [isFormVisible, setFromVisible] = useState(false);
-
   return (
-    <div className=' space-y-4 '>
-      <h1 className='text-3xl font-extrabold text-center'>Task manager</h1>
-      <button
-        type='submit'
-        className='w-full bg-blue-600 hover:bg-blue-700  text-white font-semibold px-4 py-2 rounded-lg shadow-md'
-        onClick={() => setFromVisible(!isFormVisible)}
-      >
-        {!isFormVisible ? 'Create Task' : 'Close form'}
-      </button>
-
-      {isFormVisible && <CreateTaskForm />}
-      {/* <TaskList /> */}
-      {/* <Outlet /> */}
-    </div>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<h1 className="text-2xl font-bold mb-4">Task manager list</h1>} />
+        <Route path={AppRoutes.TASK_LIST} element={<TaskListPage />} />
+        <Route path={AppRoutes.TASK} element={<TaskPage />} />
+        <Route path={AppRoutes.CREATE_TASK} element={<CreateTaskPage />} />
+      </Route>
+    </Routes>
   );
 };

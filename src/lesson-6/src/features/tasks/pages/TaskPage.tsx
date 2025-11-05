@@ -1,15 +1,14 @@
-import { Link, Navigate, Outlet, useNavigate, useParams } from 'react-router';
+import { Outlet, useNavigate, useParams } from 'react-router';
 import { taskApi } from '../../../store/tasks';
-import { Task } from '../../../shared/elements/Task';
-// import { Task } from '../../../elements/Task';
 
 import { format } from "date-fns";
-import type { Priority, Status } from '../types';
 import { EmptyState } from '../../../shared/elements/EmptyState';
 import { LoadingState } from '../../../shared/elements/LoadingState';
 import { ErrorState } from '../../../shared/elements/ErrorState';
 import type { FC } from 'react';
 import { LeftOutlined } from '@ant-design/icons';
+import { AppRoutes } from '../../../shared/types/router';
+import type { Priority, Status } from '../../types';
 
 const statusColors: Record<Status, string> = {
     todo: "bg-gray-200 text-gray-700",
@@ -37,11 +36,12 @@ export const TaskPage: FC = () => {
         title='No task found'
         description="Something went wrong"
         actionLabel="Back to task list"
-        onAction={() => navigation('/task')}
+        onAction={() => navigation(AppRoutes.TASK_LIST)}
     />;
 
-    return <>
-        <button onClick={() => navigation(-1)}><LeftOutlined /> Back</button>
+    return <div className='grid gap-y-4'>
+        <button className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition group cursor-pointer"
+            onClick={() => navigation(AppRoutes.TASK_LIST)}><LeftOutlined /> Back</button>
         <div className="bg-white shadow-md rounded-xl p-5 border border-gray-100 hover:shadow-lg transition">
             <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-gray-800">{data.title}</h3>
@@ -70,5 +70,5 @@ export const TaskPage: FC = () => {
             )}
         </div>
         <Outlet />
-    </>;
+    </div>;
 };

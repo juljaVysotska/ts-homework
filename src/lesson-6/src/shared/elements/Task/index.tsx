@@ -1,13 +1,15 @@
 import { Tag } from 'antd';
-import type { TaskBody } from '../../../features/tasks/types';
+import type { Priority, Status, TaskBody } from '../../../features/types';
+import type { JSX } from 'react';
+import { format } from 'date-fns';
 
-const statusTags = {
+const statusTags: Record<Status, JSX.Element> = {
   done: <Tag color='green'>Done</Tag>,
   in_progress: <Tag color='yellow'>In progress</Tag>,
   todo: <Tag color='gray'>To do</Tag>,
 };
 
-const priorityTags = {
+const priorityTags: Record<Priority, JSX.Element> = {
   high: <Tag color='red'>Hight</Tag>,
   normal: <Tag color='yellow'>Normal</Tag>,
   low: <Tag color='gray'>Low</Tag>,
@@ -31,9 +33,9 @@ export const Task = ({
         <span className='text-gray-600 font-medium'>
           Priority: {priorityTags[priority]}
         </span>
-        <span className='text-gray-600'>
-          Deadline: {deadline?.split('T')[0]}
-        </span>
+        {deadline && <span className='text-gray-600'>
+          Deadline: {format(deadline, "MMM dd, yyyy")}
+        </span>}
       </div>
     </li>
   );

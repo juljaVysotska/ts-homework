@@ -1,3 +1,5 @@
+import type { FC } from 'react';
+
 interface EmptyStateProps {
     title?: string;
     description?: string;
@@ -5,7 +7,7 @@ interface EmptyStateProps {
     onAction?: () => void;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
+export const EmptyState: FC<EmptyStateProps> = ({
     title = "No items found",
     description = "There’s nothing here yet. Try creating a new item to get started.",
     actionLabel,

@@ -57,6 +57,24 @@
       "createdAt": "2025-10-18T09:00:00.000Z",
       "priority": "low",
       "type": "subtask"
+    },
+    {
+      "id": "d4a6",
+      "title": "Create widget",
+      "description": "Create widget with new version",
+      "status": "todo",
+      "deadline": "2025-11-06",
+      "priority": "low",
+      "createdAt": "2025-11-05T15:19:24.062Z"
+    },
+    {
+      "id": "cd4c",
+      "title": "Create logo",
+      "description": "Create logo",
+      "status": "todo",
+      "deadline": "2025-11-07",
+      "priority": "low",
+      "createdAt": "2025-11-05T15:21:20.768Z"
     }
   ]
 }
