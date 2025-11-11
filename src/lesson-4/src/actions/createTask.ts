@@ -1,10 +1,44 @@
-import { getFormHtml } from '../components/getFormHtml';
 import { createTask } from '../server-util';
 import type { Priority, Status, Task } from '../types';
 import { updateTasks } from './updateTasks';
 
-export const setupForm = async (element: HTMLElement) => {
-  element.innerHTML = getFormHtml();
+const getFormValidation = (formData: Omit<Task, 'id'>) => {
+  let valid = true;
+
+  const setError = (elementId: string, text: string) => {
+    document.getElementById(elementId)!.textContent = text;
+    valid = false;
+    return;
+  };
+
+  document.querySelectorAll('.error').forEach((e) => (e.textContent = ''));
+
+  if (formData.title.length < 3) {
+    setError('titleError', 'Min. 3 symbols.');
+  }
+
+  if (formData.description.trim().length < 3) {
+    setError('descriptionError', 'Min. 3 symbols.');
+  }
+
+  if (!formData.status) {
+    setError('statusError', 'Select status');
+  }
+
+  if (!formData.priority) {
+    setError('priorityError', 'Select priority');
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  const deadline = document.querySelector<HTMLInputElement>('#deadline')!;
+  if (!formData.deadline || deadline.value < today) {
+    setError('dateError', 'Data must be in future');
+  }
+
+  return valid;
+};
+
+export const setupForm = () => {
   const item = document.querySelector<HTMLFormElement>('#simpleForm')!;
 
   const title = item.querySelector<HTMLInputElement>('#title')!;
@@ -16,7 +50,6 @@ export const setupForm = async (element: HTMLElement) => {
   const onSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
 
-    let valid = true;
     const result: Omit<Task, 'id'> = {
       title: title.value.trim(),
       description: description.value.trim(),
@@ -25,35 +58,10 @@ export const setupForm = async (element: HTMLElement) => {
       status: status.value as Status,
       priority: priority.value as Priority,
     };
+    const isFormValid = getFormValidation(result);
 
-    document.querySelectorAll('.error').forEach((e) => (e.textContent = ''));
-
-    if (result.title.length < 3) {
-      document.getElementById('titleError')!.textContent = 'Min. 3 symbols.';
-      valid = false;
-    }
-    if (result.description.trim().length < 3) {
-      document.getElementById('descriptionError')!.textContent =
-        'Min. 3 symbols.';
-      valid = false;
-    }
-    if (!result.status) {
-      document.getElementById('statusError')!.textContent = 'Select status';
-      valid = false;
-    }
-
-    if (!result.status) {
-      document.getElementById('priorityError')!.textContent = 'Select priority';
-      valid = false;
-    }
-    const today = new Date().toISOString().split('T')[0];
-    if (!result.deadline || deadline.value < today) {
-      document.getElementById('dateError')!.textContent =
-        'Data must be in future';
-      valid = false;
-    }
-
-    if (valid) {
+    if (isFormValid) {
+      console.log(result);
       await createTask({
         title: result.title,
         description: result.description,

@@ -13,7 +13,7 @@ export const getTaskHtml = ({
 <div class="flex justify-between text-sm mt-2">
     <span class="text-blue-600 font-medium ">Status: ${status}</span>
     <span class="text-yellow-600 font-medium">Priority: ${priority}</span>
-    <span class="text-gray-500">Deadline: ${deadline.toISOString().split('T')[0]}</span>
+    <span class="text-gray-500">Deadline: ${deadline && deadline.toString().split('T')[0]}</span>
 </div>
 </li>
 
