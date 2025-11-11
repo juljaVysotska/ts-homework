@@ -6,15 +6,15 @@ import { data } from './parsedData';
 const controller = new TaskController(new TaskService(data));
 
 // ✅
-// console.log(controller.getAll());
+console.log(controller.getAll());
 
-// // ✅
-// console.log(controller.getById('3'));
+// ✅
+console.log(controller.getById('3'));
 
-// // ✅
-// console.log(controller.delete('1'));
+// ✅
+console.log(controller.delete('1'));
 
-// // ✅
+// ✅
 console.log(
   controller.filter({
     status: 'in_progress',
@@ -23,10 +23,10 @@ console.log(
   }),
 );
 
-// // ✅
-// console.log(controller.checkIsOverdue('4'));
+// ✅
+console.log(controller.checkIsOverdue('4'));
 
-// // ✅
+// ✅
 console.log(
   controller.getById('1'),
 
@@ -38,7 +38,7 @@ console.log(
   }),
 );
 
-// // ✅
+// ✅
 console.log(
   controller.create(TaskType.bug, {
     title: 'Create page',
